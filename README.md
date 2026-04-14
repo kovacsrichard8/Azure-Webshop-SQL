@@ -100,5 +100,49 @@ foreign key (Product_Id) references Products (Id));
 ```
 A létrehozott adatbázis szerkezet a webshop alkalmazás alapja lesz és a táblák közötti kapcsolatok elősegítik, hogy egy-egy rendelési folyamat gördülékenyen végbemenjen. Az alábbi diagram segítségével láthatóak azok a relációs kapcsolatok, amik létrejöttek az egyes táblák között. 
 
+<img src="./webshop/Diagram.jpg" width="400">
+
+---
 
 ### DBeaver - Indexek létrehozása
+
+Az indexek segítenek abban, hogy egy összetett adatbázisban - akár több százezer vagy milliós nagyságrendű rekord között is - gyorsan megtaláljuk a keresett elemet ezzel elkerülve a hosszabb várakozási időt. A **Primary Key** (`ID`) segítségével gyorsan hozzáférhetünk egy-egy rekordhoz. Ellenben egy index nélküli `Email_Address` mezőnél a válaszidő megugrik, mert a rendszer **Full Table Scan** keresésbe kezd, ami a rekordok egyesével történő vizsgálatát jelenti az első sortól kezdve. Ez nagyobb adatmennyiségnél válhat igazán kellemetlen folyamattá.
+
+Az index lehetőséget biztosít arra, hogy bizonyos oszlopokat megjelölve a keresések villámgyorsan végrehajtódjanak. Ezen adatbázishoz három index felvételét tartottam releváns opciónak, ami hasznos lehet.
+
+*E-mail címre keresés:*
+```sql
+create index Email_Index
+on Customers (Email_Address);
+```
+
+*Terméknévre keresés:*
+```sql
+create index ProductName_Index
+on Products (Product_Name);
+```
+
+*Kategória típusra keresés:*
+```sql
+create index CategoryName_Index 
+on Product_Category (Category_Name);
+```
+---
+
+## Webshop adatbázis felépítése Azure SQL Database segítségével
+
+Az adatbázis elkészítése után egy demo alkalmazást szeretnék működtetni néhány mintaadattal, így a költséghatékonyság elvét szem előtt tartva, olyan adatbázist szeretnék üzemeltetni, ami nem a skálázhatóságra, hanem a minimális erőforrásigény kielégítésére lesz kialakítva.
+
+Az SQL Service Tier és redundancia beállításai megoldásokat kínálnak a költséghatékony működtetésre. Ha nem létszükséglet a nagyobb Storage vagy az írási, olvsási sebesség, akkor a Basic DTU beállítás optimális választás lehet, ami mellett csak minimális havi díjjal kell számolni.
+
+### Azure SQL Database létrehozása
+
+Az Azure Portálra belépve a keresőmezőben rákeresünk az **SQL Database** kifejezésre, majd SQL létrehozásával elindíjuk a folyamatot. 
+Főbb pontok, amiket érdemes követni a létrehozás során:
+
+- Egyedi `kiszolgálónév`;
+- `SQL autentikáció` vagy `SQL és Microsoft Entra autentikáció` beállítása;
+- Autentikációhoz `felhasználónév` és `Jelszó` páros;
+- Munkakörnyezet: `Fejlesztő`;
+- `Nyilvános végpont` alkalmazása, a `tűzfalszabályok engedélyezése`;
+- Létrehozás, majd adatbázis létrejötte.
