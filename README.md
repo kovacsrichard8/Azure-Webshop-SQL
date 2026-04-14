@@ -146,3 +146,56 @@ Főbb pontok, amiket érdemes követni a létrehozás során:
 - Munkakörnyezet: `Fejlesztő`;
 - `Nyilvános végpont` alkalmazása, a `tűzfalszabályok engedélyezése`;
 - Létrehozás, majd adatbázis létrejötte.
+
+### Táblák létrehozása
+
+Az alábbi képen látható bejelentkezést követően a Portál felületén el is tudjuk kezdeni a tábla felépítését. 
+
+<img src="./webshop/Enter to query Editor.jpg" width="500">
+
+- `Customers`
+```sql
+create table Customers (
+Id INT IDENTITY PRIMARY KEY,
+First_Name NVARCHAR(150),
+Last_Name NVARCHAR(150),
+Phone_Number NVARCHAR(150),
+Email_Address NVARCHAR(150));
+```
+- `Product_Category`
+```sql
+create table Product_Category(
+Id INT IDENTITY PRIMARY KEY,
+Category_Name NVARCHAR(150));
+```
+- `Products`
+```sql
+create table Products (
+Id Id INT IDENTITY PRIMARY KEY,
+Product_Name NVARCHAR(150),
+Price INT,
+Category_Id INT,
+CONSTRAINT fk_category
+FOREIGN KEY (Category_Id) REFERENCES product_category (Id));
+```
+- `Orders`
+```sql
+create table Orders (
+Id INT IDENTITY PRIMARY KEY,
+Customer_Id INT,
+Payment_Method NVARCHAR(150),
+CONSTRAINT fk_customers
+FOREIGN KEY (Customer_Id) REFERENCES Customers (Id));
+```
+- `Order_Items`
+```sql
+create table Order_Items (
+Id INT IDENTITY PRIMARY KEY,
+Orders_Id INT,
+Product_Id INT,
+Quantity INT,
+CONSTRAINT fk_orders
+FOREIGN KEY (Orders_Id) REFERENCES Orders (Id),
+CONSTRAINT fk_products
+FOREIGN KEY (Product_Id) REFERENCES Products (Id));
+```
