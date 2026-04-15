@@ -241,7 +241,7 @@ A létrehozott adatbázisban és feltöltött adatokkal három egyszerűbb leké
 SELECT Product_Name, Price 
 FROM Products WHERE Price > 60000;
 ```
-(KÉP)
+<img src="./webshop/First SQL.jpg" width="600">
 
 2. Készítsünk egy listát, amely megmutatja a vásárlók teljes nevét (`First_Name` and `Last_Name`) és a fizetés módját (`Payment_Method`). 
 
@@ -250,7 +250,7 @@ SELECT First_Name, Last_Name, Payment_Method FROM Customers
 INNER JOIN Orders
 ON Customers.Id=Orders.Customer_Id; 
 ```
-(KÉP)
+<img src="./webshop/Second SQL.jpg" width="600">
 
 3. Határozzuk meg, hogy melyik vásárló hány darab rendelést adott le. A listában a vásárló e-mail címe mellett a rendeléseiknek száma szerepeljen.
 
@@ -259,4 +259,4 @@ SELECT Customers.Email_Address, COUNT(Orders.Id) AS Number_of_Orders FROM Custom
 INNER JOIN Orders ON Customers.Id = Orders.Customer_Id
 GROUP BY Customers.Email_Address;
 ```
-
+<img src="./webshop/Third SQL.jpg" width="600">
