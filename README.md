@@ -231,5 +231,25 @@ INSERT INTO Order_Items (Orders_Id, Product_Id, Quantity)
 VALUES ('2', '1', '2'), ('1', '2', '1');
 ```
 
+### SQL lekérdezések
+
+A létrehozott adatbázisban és feltöltött adatokkal három egyszerűbb lekérdezést fogok megvalósítani az alábbi feladatok szerint:
+
+1. Listázzuk ki az összes olyan terméket a `Products` táblából, amelynek az ára meghaladja a 60 000 forintot. Csak a termék neve (`Product_Name`) és az ára (`Price`) szerepeljen a listában.
+
+```sql
+SELECT Product_Name, Price 
+FROM Products WHERE Price > 60000
+```
+(KÉP)
+
+2. Készítsünk egy listát, amely megmutatja a vásárlók teljes nevét (`First_Name` and `Last_Name`) és a fizetés módját (`Payment_Method`)! 
+
+```sql
+SELECT First_Name, Last_Name, Payment_Method FROM Customers
+INNER JOIN Orders
+ON Customers.Id=Orders.Customer_Id 
+```
+(KÉP)
 
 
