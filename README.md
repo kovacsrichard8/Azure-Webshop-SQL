@@ -149,7 +149,7 @@ Főbb pontok, amiket érdemes követni a létrehozás során:
 
 ### Táblák létrehozása
 
-Az alábbi képen látható bejelentkezést követően a Portál felületén el is tudjuk kezdeni a tábla felépítését. 
+Az alábbi képen látható bejelentkezést követően az Azure portál felületén el is tudjuk kezdeni a tábla felépítését. 
 
 <img src="./webshop/Enter to query Editor.jpg" width="500">
 
@@ -199,3 +199,37 @@ FOREIGN KEY (Orders_Id) REFERENCES Orders (Id),
 CONSTRAINT fk_products
 FOREIGN KEY (Product_Id) REFERENCES Products (Id));
 ```
+Az indexek létrehozása ugyanazzal az SQL szintaxissal történik, amit a DBeaver program részeként is már korábban használtunk. Az adatok feltöltésénél azonban az Azure Query Editor nem biztosít lehetőséget számunkra, hogy manuális töltsük fel adatokkal a táblázatokat, ezért a **CRUD** műveletek csoportjának egyik műveleti eleme az `INSERT INTO` SQL utasítást fogjuk használni az adatok rögzítésére.
+
+### Adatok feltöltése
+
+`Customers`
+```sql
+INSERT INTO Customers (First_Name, Last_Name, Phone_Number, Email_Address)
+VALUES ('Milan', 'Kovacs', '06308521477', 'mil.kov@gmail.com'),
+('György', 'Nagy', '06206542378', 'gy.nagy@gmail.com');
+```
+`Product_Category`
+```sql
+INSERT INTO Product_Category (Category_Name)
+VALUES ('Phones'), ('Televisions');
+```
+`Products`
+```sql
+INSERT INTO Products (Product_Name, Price, Category_Id)
+VALUES ('Motorola Edge 50 NEO', '50000', '1'),
+('Hisense', '120000', '2');
+```
+`Orders`
+```sql
+INSERT INTO Orders (Customer_Id, Payment_Method)
+VALUES ('1', 'Cash'), ('2', 'Bankcard');
+```
+`Order_Items`
+```sql
+INSERT INTO Order_Items (Orders_Id, Product_Id, Quantity)
+VALUES ('2', '1', '2'), ('1', '2', '1');
+```
+
+
+
