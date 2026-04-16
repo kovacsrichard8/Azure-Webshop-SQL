@@ -2,9 +2,7 @@
 
 ## Relational Database Design for Azure SQL
 
-### DBeaver - Adatbázis csatlakozás és létrehozás
-
-<br>
+### DBeaver - Adatbázishoz csatlakozás és létrehozása
 
 Az alábbiakban egy webshop relációs adatbázis felépítését fogom bemutatni a DBeaver kliens segítségével, amellyel egy MySQL adatbázis kezelőhöz fogok távolról csatlakozni és felépíteni az adatbázis szerkezetét az alábbi szempontokat figyelembe véve:
 
@@ -15,7 +13,7 @@ Az alábbiakban egy webshop relációs adatbázis felépítését fogom bemutatn
 - *rendelési tételek*
 - *fizetési információk alapjai* 
 
-A folyamat első lépcsője így nem lehet más, mint az adatbázis kezelőhöz való csatlakozás és az új adatbázis létrehozása.
+A folyamat első lépcsője az adatbázis kezelőhöz való csatlakozás és az új adatbázis példányom létrehozása.
 
 <table>
   <tr>
@@ -25,9 +23,9 @@ A folyamat első lépcsője így nem lehet más, mint az adatbázis kezelőhöz 
   </tr>
 </table>
 
-Miután csatlakoztunk a DBeaver felületén megjelennek a meglévő MySQL adatbázisok. Az új adatbázis létrehozása után meghatározhatjuk a táblák szerkezeti felépítését, a mezőket és az adattípusokat. A táblák közötti logikai kapcsolatokat pedig az elsődleges kulcsok, valamint az idegen kulcsok segítségével definiáljuk. 
+Miután csatlakoztunk, a DBeaver felületén megjelennek a meglévő MySQL adatbázisok. Az új adatbázis létrehozása után meghatározhatjuk a táblák szerkezeti felépítését, a mezőket és az adattípusokat. A táblák közötti logikai kapcsolatokat pedig az elsődleges kulcsok, valamint az idegen kulcsok segítségével definiáljuk. 
 
-Az alábbi kép megerősíti a sikeres csatlakozást, így minden feltétel adott a sikeres adatbázis felépítéshez:
+Az alábbi kép megerősíti a sikeres csatlakozást, így minden feltétel adott a sikeres adatbázis felépítéséhez:
 
 <img src="./webshop/Connected status.jpg" width="750">
 
@@ -35,7 +33,7 @@ Az alábbi kép megerősíti a sikeres csatlakozást, így minden feltétel adot
 
 ### 1. Vásárlók tábla létrehozása (`Customers`)
 
-Az előzetes papírra vetett tervezési lépcsőfolyamatokat ideje formába önteni és éles környezetben is kipróbálni. Az SQL szkriptek megírásával sikeresen implementálhatjuk az elképzelésünket és az ***5 tábla*** létrehozásához megírt utasításokat fogom külön-külön bemutatni.
+Az adatbázis felépítésére elkészült koncepciót az SQL szkriptek megírásával fogjuk implementálni és az ***5 tábla*** létrehozásához használt utasításokat  külön-külön szeretném bemutatni. 
 
 ```sql
 create table Customers (
@@ -58,7 +56,7 @@ Category_Name VARCHAR(150));
 
 ### 3. Termékek tábla létrehozása (`Products`)
 
-Ebben a táblában a termékek alapinformációin kívül kap helyet egy idegen kulcs is, ami az előző táblához fog kapcsolódni. 
+Ebben a táblában a termékinformációk mellett szerepel egy idegen kulcs is, amely a Termék Kategória (`Product_Category`) táblára fog hivatkozni. 
 
 ```sql
 create table Products (
@@ -106,7 +104,7 @@ A létrehozott adatbázis szerkezet a webshop alkalmazás alapja lesz és a táb
 
 ### DBeaver - Indexek létrehozása
 
-Az indexek segítenek abban, hogy egy összetett adatbázisban - akár több százezer vagy milliós nagyságrendű rekord között is - gyorsan megtaláljuk a keresett elemet ezzel elkerülve a hosszabb várakozási időt. A **Primary Key** (`ID`) segítségével gyorsan hozzáférhetünk egy-egy rekordhoz. Ellenben egy index nélküli `Email_Address` mezőnél a válaszidő megugrik, mert a rendszer **Full Table Scan** keresésbe kezd, ami a rekordok egyesével történő vizsgálatát jelenti az első sortól kezdve. Ez nagyobb adatmennyiségnél válhat igazán kellemetlen folyamattá.
+Az indexek segítenek abban, hogy egy összetett adatbázisban - több százezer vagy milliós nagyságrendű rekord között is - gyorsan megtaláljuk a keresett elemet ezzel elkerülve a hosszabb várakozási időt. A **Primary Key** (`ID`) segítségével gyorsan hozzáférhetünk egy-egy rekordhoz. Ellenben egy index nélküli `Email_Address` mezőnél a válaszidő megugrik, mert a rendszer **Full Table Scan** keresésbe kezd, ami a rekordok egyesével történő vizsgálatát jelenti az első sortól kezdve. Ez nagyobb adatmennyiségnél válhat igazán kellemetlen folyamattá.
 
 Az index lehetőséget biztosít arra, hogy bizonyos oszlopokat megjelölve a keresések villámgyorsan végrehajtódjanak. Ezen adatbázishoz három index felvételét tartottam releváns opciónak, ami hasznos lehet.
 
@@ -135,10 +133,10 @@ Az adatbázis elkészítése után egy demo alkalmazást szeretnék működtetni
 
 Az SQL Service Tier és redundancia beállításai megoldásokat kínálnak a költséghatékony működtetésre. Ha nem létszükséglet a nagyobb Storage vagy az írási, olvsási sebesség, akkor a Basic DTU beállítás optimális választás lehet, ami mellett csak minimális havi díjjal kell számolni.
 
-### Azure SQL Database létrehozása
+### 1. Azure SQL Database létrehozása
 
-Az Azure Portálra belépve a keresőmezőben rákeresünk az **SQL Database** kifejezésre, majd SQL létrehozásával elindíjuk a folyamatot. 
-Főbb pontok, amiket érdemes követni a létrehozás során:
+Az Azure Portálra belépve a keresőmezőben rákeresünk az **SQL Database** kifejezésre, majd SQL adatbázis létrehozásával elindíjuk a folyamatot. 
+Főbb beállítási pontok, amiket érdemes követni a létrehozás során:
 
 - Egyedi `kiszolgálónév`;
 - `SQL autentikáció` vagy `SQL és Microsoft Entra autentikáció` beállítása;
@@ -147,7 +145,7 @@ Főbb pontok, amiket érdemes követni a létrehozás során:
 - `Nyilvános végpont` alkalmazása, a `tűzfalszabályok engedélyezése`;
 - Létrehozás, majd adatbázis létrejötte.
 
-### Táblák létrehozása
+### 2. Táblák létrehozása
 
 Az alábbi képen látható bejelentkezést követően az Azure portál felületén el is tudjuk kezdeni a tábla felépítését. 
 
@@ -199,9 +197,9 @@ FOREIGN KEY (Orders_Id) REFERENCES Orders (Id),
 CONSTRAINT fk_products
 FOREIGN KEY (Product_Id) REFERENCES Products (Id));
 ```
-Az indexek létrehozása ugyanazzal az SQL szintaxissal történik, amit a DBeaver program részeként is már korábban használtunk. Az adatok feltöltésénél azonban az Azure Query Editor nem biztosít lehetőséget számunkra, hogy manuális töltsük fel adatokkal a táblázatokat, ezért a **CRUD** műveletek csoportjának egyik műveleti eleme az `INSERT INTO` SQL utasítást fogjuk használni az adatok rögzítésére.
+Az indexek létrehozása ugyanazzal az SQL szintaxissal történik, amit a DBeaver program részeként is már korábban használtunk. Az adatok feltöltésénél azonban az Azure Query Editor nem biztosít lehetőséget számunkra, hogy manuálisan töltsük fel adatokkal a táblázatokat, ezért a **CRUD** műveleti elemek közül az `INSERT INTO` SQL utasítást fogjuk használni az adatok rögzítésére.
 
-### Adatok feltöltése
+### 3. Adatok feltöltése
 
 `Customers`
 ```sql
@@ -231,7 +229,7 @@ INSERT INTO Order_Items (Orders_Id, Product_Id, Quantity)
 VALUES ('2', '1', '2'), ('1', '2', '1');
 ```
 
-### SQL lekérdezések
+### 4. SQL lekérdezések
 
 A létrehozott adatbázisban és feltöltött adatokkal három egyszerűbb lekérdezést fogok megvalósítani az alábbi feladatok szerint:
 
@@ -260,3 +258,5 @@ INNER JOIN Orders ON Customers.Id = Orders.Customer_Id
 GROUP BY Customers.Email_Address;
 ```
 <img src="./webshop/Third SQL.jpg" width="600">
+
+A megvalósított adatbázis struktúra és néhány egyszerűbb SQL utasítás használatával jól tesztelhető az adatbázis működése és a relációs kapcsolatok viselkedése. Ugyanakkor az is megállapítható, hogyha valaki tesztfázisban szeretne vázlat szintű adatbázist reprezenzálni felhős környezetben, akkor ezt alacsony költségek mellett is megvalósíthatja, amelynek későbbi anyagi vonzatait a növevő adatkapacitáshoz és a szükséges sebességigényhez tud majd az elképzeléseihez mérten skálázni.
